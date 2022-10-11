@@ -1,0 +1,32 @@
+version: '3.1'
+
+services:
+  proxy:
+    #command: sudo sed -i "s,www.nginxlab04.com.br,abacabb2023,g" /etc/nginx/conf.d/default.conf
+    #command: /bin/sh -c "export VALOR=`cat /var/run/secrets/opa`" && /bin/sed -i "s,www.nginxlab04.com.br,$VALOR,g" /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'
+    command: /bin/sh -c "/etc/nginx/conf.d/ajustes.sh"
+    #command: /bin/sh -c "nginx -g 'daemon off;'"
+    image: nginx
+    #restart: always
+    ports:
+      - 80:80
+    networks:
+      - netschulz
+    deploy:
+      mode: replicated
+      replicas: 1
+    secrets:
+      - opa
+    volumes:
+      - /apps/dockerswarm-lab04/service-proxy/passfile:/etc/nginx/.htpasswd
+      - /apps/dockerswarm-lab04/service-proxy/default.conf:/etc/nginx/conf.d/default.conf:rw
+      - /apps/dockerswarm-lab04/service-proxy/ajustes.sh:/etc/nginx/conf.d/ajustes.sh:ro
+
+networks:
+  netschulz:
+     driver: overlay
+
+secrets:
+  opa:
+    external: true
+

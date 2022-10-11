@@ -11,6 +11,7 @@ services:
       - netschulz
 
   adminer:
+    command: php -S 0.0.0.0:8080 -t /var/www/html
     image: adminer
     restart: always
     ports:

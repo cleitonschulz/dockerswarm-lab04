@@ -1,0 +1,27 @@
+version: '3.1'
+
+services:
+  proxy:
+    command: php -S 0.0.0.0:8080 -t /var/www/html
+    image: adminer
+    restart: always
+    ports:
+      - 80:80
+    networks:
+      - netschulz
+    deploy:
+      replicas: 1
+    secrets:
+      - opa
+    volumes:
+      - type: bind
+        source: /apps/dockerswarm-lab04/service-proxy/passfile
+        target: /etc/nginx/.htpasswd
+      - type: bind
+        source: /apps/dockerswarm-lab04/service-proxy/default.conf
+        target: /etc/nginx/conf.d/default.conf
+
+networks:
+  netschulz:
+     driver: overlay
+
